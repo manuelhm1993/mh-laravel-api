@@ -14,7 +14,7 @@ class ClientController extends Controller
      */
     public function index(): JsonResponse
     {
-        $clients = Client::all();
+        $clients = Client::with('services')->get();
 
         return response()->json($clients);
     }
@@ -61,7 +61,13 @@ class ClientController extends Controller
             return response()->json(['message' => 'Client not found'], 404);
         }
 
-        return response()->json($client);
+        $data = [
+            'message'  => 'Client displayed: '.$client->name,
+            'client'   => $client,
+            'services' => $client->services,
+        ];
+
+        return response()->json($data);
     }
 
     /**
@@ -130,7 +136,8 @@ class ClientController extends Controller
         $client->services()->attach($request->service_id);
         $data = [
             'message'  => 'Service attached successfully',
-            'client'   => Client::where('id', $client->id)->with('services')->get(),
+            'client'   => $client,
+            'services' => $client->services,
         ];
 
         return response()->json($data);
@@ -148,7 +155,8 @@ class ClientController extends Controller
         $client->services()->detach($request->service_id);
         $data = [
             'message'  => 'Service detached successfully',
-            'client'   => Client::where('id', $client->id)->with('services')->get(),
+            'client'   => $client,
+            'services' => $client->services,
         ];
 
         return response()->json($data);
