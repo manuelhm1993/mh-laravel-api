@@ -14,7 +14,7 @@ class ServiceController extends Controller
      */
     public function index(): JsonResponse
     {
-        $services = Service::all();
+        $services = Service::with('clients')->get();
 
         return response()->json($services);
     }
@@ -38,6 +38,7 @@ class ServiceController extends Controller
         $data = [
             'message' => 'Service created successfully',
             'service' => $service,
+            'clients' => $service->clients,
         ];
 
         return response()->json($data);
@@ -55,7 +56,13 @@ class ServiceController extends Controller
             return response()->json(['message' => 'Service not found'], 404);
         }
 
-        return response()->json($service);
+        $data = [
+            'message' => 'Service displayed successfully',
+            'service' => $service,
+            'clients' => $service->clients,
+        ];
+
+        return response()->json($data);
     }
 
     /**
@@ -83,7 +90,8 @@ class ServiceController extends Controller
         $service->update($request->all());
         $data = [
             'message' => 'Service updated successfully',
-            'service'  => $service,
+            'service' => $service,
+            'clients' => $service->clients,
         ];
 
         return response()->json($data);
@@ -104,6 +112,23 @@ class ServiceController extends Controller
         $service->delete();
         $data = [
             'message' => 'Service deleted successfully',
+            'service'  => $service,
+        ];
+
+        return response()->json($data);
+    }
+
+    public function clients($id): JsonResponse
+    {
+        $service = Service::where('id', $id)->with('clients')->get();
+
+        if($service->count() == 0)
+        {
+            return response()->json(['message' => 'Service not found'], 404);
+        }
+
+        $data = [
+            'message' => 'Service displayed with its clients successfully',
             'service'  => $service,
         ];
 

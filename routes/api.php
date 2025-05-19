@@ -18,3 +18,7 @@ Route::controller(ClientController::class)->prefix('clients')->name('clients.')-
     Route::post('/services', 'attach')->name('services.attach');
     Route::delete('{client}/services', 'detach')->name('services.detach');
 });
+
+Route::controller(ServiceController::class)->prefix('services')->name('services.')->group(function () {
+    Route::get('{service}/clients', 'clients')->name('clients');
+});
