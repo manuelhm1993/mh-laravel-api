@@ -13,3 +13,5 @@ Route::apiResources([
     'clients'  => ClientController::class,
     'services' => ServiceController::class,
 ]);
+
+Route::post('/clients/{client}/services', [ClientController::class, 'attach'])->name('clients.services.attach');

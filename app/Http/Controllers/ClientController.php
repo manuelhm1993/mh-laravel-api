@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Client;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -11,7 +12,7 @@ class ClientController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): JsonResponse
     {
         $clients = Client::all();
 
@@ -21,7 +22,7 @@ class ClientController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'name'    => 'required|string|max:255',
@@ -47,7 +48,7 @@ class ClientController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(int $id)
+    public function show(int $id): JsonResponse
     {
         /**
          * Para validar el id es necesario recibir el id como entero, porque al inyectar el modelo Client
@@ -66,7 +67,7 @@ class ClientController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, int $id)
+    public function update(Request $request, int $id): JsonResponse
     {
         $client = Client::find($id);
 
@@ -99,7 +100,7 @@ class ClientController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(int $id)
+    public function destroy(int $id): JsonResponse
     {
         $client = Client::find($id);
 
@@ -115,5 +116,10 @@ class ClientController extends Controller
         ];
 
         return response()->json($data);
+    }
+
+    public function attach(): JsonResponse | null
+    {
+        return null;
     }
 }
