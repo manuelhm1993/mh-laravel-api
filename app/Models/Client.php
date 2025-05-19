@@ -10,6 +10,13 @@ class Client extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+        'email',
+        'phone',
+        'address',
+    ];
+
     public function services(): BelongsToMany
     {
         return $this->belongsToMany(Service::class)->withTimestamps();
