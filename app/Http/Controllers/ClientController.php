@@ -118,8 +118,41 @@ class ClientController extends Controller
         return response()->json($data);
     }
 
-    public function attach(): JsonResponse | null
+    public function attach(Request $request): JsonResponse
     {
-        return null;
+        $client = Client::find($request->client_id);
+
+        if(!$client)
+        {
+            return response()->json(['message' => 'Client not found'], 404);
+        }
+
+        $client->services()->attach($request->service_id);
+        $data = [
+            'message'  => 'Service attached successfully',
+            'client'   => $client,
+            'service'   => $client->services,
+        ];
+
+        return response()->json($data);
+    }
+
+    public function detach(Request $request, int $id): JsonResponse
+    {
+        $client = Client::find($id);
+
+        if(!$client)
+        {
+            return response()->json(['message' => 'Client not found'], 404);
+        }
+
+        $client->services()->detach($request->service_id);
+        $data = [
+            'message'  => 'Service detached successfully',
+            'client'   => $client,
+            'service'   => $client->services,
+        ];
+
+        return response()->json($data);
     }
 }

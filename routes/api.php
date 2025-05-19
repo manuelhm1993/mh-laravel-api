@@ -14,4 +14,7 @@ Route::apiResources([
     'services' => ServiceController::class,
 ]);
 
-Route::post('/clients/{client}/services', [ClientController::class, 'attach'])->name('clients.services.attach');
+Route::controller(ClientController::class)->prefix('clients')->name('clients.')->group(function () {
+    Route::post('/services', 'attach')->name('services.attach');
+    Route::delete('{client}/services', 'detach')->name('services.detach');
+});
