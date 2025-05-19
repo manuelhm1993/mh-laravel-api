@@ -130,8 +130,7 @@ class ClientController extends Controller
         $client->services()->attach($request->service_id);
         $data = [
             'message'  => 'Service attached successfully',
-            'client'   => $client,
-            'service'   => $client->services,
+            'client'   => Client::where('id', $client->id)->with('services')->get(),
         ];
 
         return response()->json($data);
@@ -149,8 +148,7 @@ class ClientController extends Controller
         $client->services()->detach($request->service_id);
         $data = [
             'message'  => 'Service detached successfully',
-            'client'   => $client,
-            'service'   => $client->services,
+            'client'   => Client::where('id', $client->id)->with('services')->get(),
         ];
 
         return response()->json($data);
