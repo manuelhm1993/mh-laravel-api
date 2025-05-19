@@ -47,16 +47,34 @@ class ClientController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Client $client)
+    public function show(int $id)
     {
+        /**
+         * Para validar el id es necesario recibir el id como entero, porque al inyectar el modelo Client
+         * el error no se lanza  
+         * */
+        $client = Client::find($id);
+
+        if(!$client)
+        {
+            return response()->json(['message' => 'Client not found'], 404);
+        }
+
         return response()->json($client);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Client $client)
+    public function update(Request $request, int $id)
     {
+        $client = Client::find($id);
+
+        if(!$client)
+        {
+            return response()->json(['message' => 'Client not found'], 404);
+        }
+
         $validator = Validator::make($request->all(), [
             'name'    => 'required|string|max:255',
             'email'   => 'required|email|max:255|unique:clients,email,' . $client->id,
@@ -72,7 +90,7 @@ class ClientController extends Controller
         $client->update($request->all());
         $data = [
             'message' => 'Client updated successfully',
-            'client'  => $client
+            'client'  => $client,
         ];
 
         return response()->json($data);
@@ -81,11 +99,19 @@ class ClientController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Client $client)
+    public function destroy(int $id)
     {
+        $client = Client::find($id);
+
+        if(!$client)
+        {
+            return response()->json(['message' => 'Client not found'], 404);
+        }
+        
         $client->delete();
         $data = [
             'message' => 'Client deleted successfully',
+            'client'  => $client,
         ];
 
         return response()->json($data);
